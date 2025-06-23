@@ -7,5 +7,5 @@ export interface IRegisterUser {
     name: string;
     email: string;
     password: string;
-    role: "ADMIN" | "TUTOR" | "STUDENT";
+    role: "admin" | "tutor" | "student";
 };

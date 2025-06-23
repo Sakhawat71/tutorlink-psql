@@ -4,7 +4,6 @@ const route = Router();
 
 route.post(
     '/register',
-    // validateRequest(userValidation.createUserValidation),
     userController.register
 );
 

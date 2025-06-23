@@ -38,7 +38,6 @@ const registerUser = async (payload: IRegisterUser) => {
 const loginUser = async (payload: ILoginUser) => {
 
     const { email, password } = payload;
-
     const userData = await prisma.user.findUnique({
         where: {
             email: payload.email,
@@ -76,7 +75,7 @@ const loginUser = async (payload: ILoginUser) => {
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
         throw new AppError(
-            "Invalid credentials",
+            "Invalid password",
             status.UNAUTHORIZED,
         );
     };
@@ -89,48 +88,16 @@ const loginUser = async (payload: ILoginUser) => {
     };
 
     // Create jwt access token
-    const accessToken = jwt.sign(
+    const accessToken = generateToken(
         JwtPayload,
-        configs.accessTokenSecret as string,
-        {
-            expiresIn: configs.accessTokenExpiry as any,
-        }
+        configs.jwt.jwt_secret as string,
+        configs.jwt.expiresin as string
     );
 
     return {
         token: accessToken
     }
 };
-
-
-const loginInToDB = async (payload: ILoginUser) => {
-    const userData = await prisma.user.findUnique({
-        where: {
-            email: payload.email,
-        }
-    });
-    if (!userData) {
-        throw new Error("user not found")
-    };
-
-    const isCorrectPassword: boolean = await bcrypt.compare(payload.password, userData.password);
-    if (!isCorrectPassword) {
-        throw new Error("password incurrect")
-    };
-
-    const accessToken = generateToken({
-        email: userData.email,
-        role: userData.role,
-    },
-        configs.jwt.jwt_secret as string,
-        configs.jwt.expiresin as string
-    );
-
-    return {
-        token: accessToken,
-    };
-};
-
 
 
 export const authService = {

@@ -125,9 +125,9 @@ model Review {
 }
 
 enum UserRole {
-  ADMIN
-  TUTOR
-  STUDENT
+  admin
+  tutor
+  student
 }
 
 enum Location {
@@ -147,6 +147,7 @@ model Availability {
   day       Day // Strict enum days
   startTime String // "10:00" format
   endTime   String // "12:00" format
+  
   Tutor     Tutor?  @relation(fields: [tutorId], references: [id])
   tutorId   String?
 }
