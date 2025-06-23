@@ -1,9 +1,11 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-// import notFound from './app/middlewares/notFound';
-// import globalErrorHandler from './app/middlewares/globalErrorHandler';
-// import router from './app/routes';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
+import notFound from './app/middlewares/notFound';
+import router from './app/routes';
+import status from 'http-status';
+
 const app: Application = express();
 
 app.use(
@@ -17,18 +19,18 @@ app.use(cookieParser());
 // app.use(express.urlencoded({ extended: true }));
 
 // routes
-// app.use('/api', router);
+app.use('/api', router);
 
 // stating point
 app.get('/', (req: Request, res: Response) => {
-    res.status(200).json({
+    res.status(status.OK).json({
         status: 'success',
-        message: 'Portfolio server running..........',
+        message: 'Tutorlink server running..........',
     });
 });
 
 // global error handler
-// app.use(globalErrorHandler);
-// app.use(notFound);
+app.use(globalErrorHandler);
+app.use(notFound);
 
 export default app;
