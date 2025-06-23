@@ -1,15 +1,157 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  // output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  name     String
+  password String
+  role     UserRole
+
+  isBlocked         Boolean @default(false)
+  isActive          Boolean @default(true)
+  isCompleteProfile Boolean @default(false)
+
+  Tutor Tutor?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Tutor {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  bio         String
+  experience  String
+  hourlyRate  Float
+  subjectList String[]
+  location    Location
+  isAvailable Boolean  @default(true)
+  subjects    String[]
+
+  availability Availability[]
+  bookings     Booking[]
+  reviews      Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tutors")
+}
+
+model Student {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  gradeLevel  String?
+  institution String?
+
+  bookings Booking[]
+  reviews  Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("students")
+}
+
+model Booking {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  student   User   @relation(fields: [studentId], references: [id], name: "StudentBookings")
+  studentId String @db.ObjectId
+
+  tutor   User   @relation(fields: [tutorId], references: [id], name: "TutorBookings")
+  tutorId String @db.ObjectId
+
+  subject   Subject @relation(fields: [subjectId], references: [id])
+  subjectId String  @db.ObjectId
+
+  slot     Slot          @relation(fields: [slotId], references: [id])
+  slotId   String        @db.ObjectId
+  date     DateTime
+  duration Int // in minutes
+  price    Float
+  status   BookingStatus @default(PENDING)
+  payment  Payment?
+  review   Review?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  booking       Booking       @relation(fields: [bookingId], references: [id])
+  bookingId     String        @db.ObjectId
+  amount        Float
+  paymentMethod String // "stripe", "sslcommerz", "paypal"
+  transactionId String
+  status        PaymentStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+}
+
+model Review {
+  id String @id @default(uuid())
+
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  bookingId String  @db.ObjectId
+
+  tutor   User   @relation(fields: [tutorId], references: [id], name: "TutorReviews")
+  tutorId String @db.ObjectId
+
+  student   User   @relation(fields: [studentId], references: [id])
+  studentId String @db.ObjectId
+
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+}
+
+enum UserRole {
+  ADMIN
+  TUTOR
+  STUDENT
+}
+
+enum Location {
+  ONLINE
+  ONSITE
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Availability {
+  day       Day // Strict enum days
+  startTime String // "10:00" format
+  endTime   String // "12:00" format
+}
+
+enum Day {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
 }
