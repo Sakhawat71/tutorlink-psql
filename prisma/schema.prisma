@@ -19,7 +19,8 @@ model User {
   isActive          Boolean @default(true)
   isCompleteProfile Boolean @default(false)
 
-  Tutor Tutor?
+  tutor   Tutor?
+  student Student?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -70,52 +71,53 @@ model Student {
 }
 
 model Booking {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(uuid())
 
-  student   User   @relation(fields: [studentId], references: [id], name: "StudentBookings")
-  studentId String @db.ObjectId
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
 
-  tutor   User   @relation(fields: [tutorId], references: [id], name: "TutorBookings")
-  tutorId String @db.ObjectId
+  tutorId String
+  tutor   Tutor  @relation(fields: [tutorId], references: [id])
 
-  subject   Subject @relation(fields: [subjectId], references: [id])
-  subjectId String  @db.ObjectId
-
-  slot     Slot          @relation(fields: [slotId], references: [id])
-  slotId   String        @db.ObjectId
   date     DateTime
-  duration Int // in minutes
+  duration Int
   price    Float
-  status   BookingStatus @default(PENDING)
-  payment  Payment?
-  review   Review?
+
+  status BookingStatus @default(PENDING)
+
+  payment Payment?
+  review  Review?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Payment {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  booking       Booking       @relation(fields: [bookingId], references: [id])
-  bookingId     String        @db.ObjectId
+  id String @id @default(uuid())
+
+  bookingId String  @unique
+  booking   Booking @relation(fields: [bookingId], references: [id])
+
   amount        Float
   paymentMethod String // "stripe", "sslcommerz", "paypal"
   transactionId String
   status        PaymentStatus @default(PENDING)
-  createdAt     DateTime      @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Review {
   id String @id @default(uuid())
 
+  bookingId String  @unique
   booking   Booking @relation(fields: [bookingId], references: [id])
-  bookingId String  @db.ObjectId
 
-  tutor   User   @relation(fields: [tutorId], references: [id], name: "TutorReviews")
-  tutorId String @db.ObjectId
+  tutorId String
+  tutor   Tutor  @relation(fields: [tutorId], references: [id])
 
-  student   User   @relation(fields: [studentId], references: [id])
-  studentId String @db.ObjectId
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
 
   rating    Int
   comment   String?
@@ -141,9 +143,12 @@ enum PaymentStatus {
 }
 
 model Availability {
+  id        String  @id @default(uuid())
   day       Day // Strict enum days
   startTime String // "10:00" format
   endTime   String // "12:00" format
+  Tutor     Tutor?  @relation(fields: [tutorId], references: [id])
+  tutorId   String?
 }
 
 enum Day {
@@ -154,4 +159,11 @@ enum Day {
   Friday
   Saturday
   Sunday
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
 }
