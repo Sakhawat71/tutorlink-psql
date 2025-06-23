@@ -1,4 +1,4 @@
-import { ILoginUser } from "./auth.interface";
+import { ILoginUser, IRegisterUser } from "./auth.interface";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { AppError } from "../../errors/AppError";
@@ -9,23 +9,35 @@ import generateToken from "../../utils/generateToken";
 
 
 // register
-const registerUser = async (payLoad: IUser) => {
+const registerUser = async (payload: IRegisterUser) => {
 
-    const { email } = payLoad;
-    const existingUser = await UserModel.findOne({ email });
+    const existingUser = await prisma.user.findUnique({
+        where: {
+            email: payload.email,
+        }
+    })
     if (existingUser) {
         throw new AppError(
             "User with this email already exists",
             status.CONFLICT,
         );
     };
-    return await UserModel.create(payLoad);
+
+    const hashedPassword = await bcrypt.hash(payload.password, 10);
+    return await prisma.user.create({
+        data: {
+            name: payload.name,
+            email: payload.email,
+            password: hashedPassword,
+            role: payload.role,
+        }
+    })
 };
 
 // login
-const loginUser = async (payLoad: ILoginUser) => {
+const loginUser = async (payload: ILoginUser) => {
 
-    const { email, password } = payLoad;
+    const { email, password } = payload;
 
     const userData = await prisma.user.findUnique({
         where: {
@@ -40,7 +52,11 @@ const loginUser = async (payLoad: ILoginUser) => {
     };
 
 
-    const user = await UserModel.findOne({ email });
+    const user = await prisma.user.findUnique({
+        where: {
+            email: email,
+        }
+    });
     if (!user) {
         throw new AppError(
             "Invalid credentials",
@@ -69,7 +85,7 @@ const loginUser = async (payLoad: ILoginUser) => {
         email: user.email,
         name: user.name,
         role: user.role,
-        id: user._id,
+        id: user.id,
     };
 
     // Create jwt access token
@@ -87,7 +103,7 @@ const loginUser = async (payLoad: ILoginUser) => {
 };
 
 
-const loginInToDB = async (payload: ILogin) => {
+const loginInToDB = async (payload: ILoginUser) => {
     const userData = await prisma.user.findUnique({
         where: {
             email: payload.email,
@@ -111,7 +127,7 @@ const loginInToDB = async (payload: ILogin) => {
     );
 
     return {
-        token : accessToken,
+        token: accessToken,
     };
 };
 
