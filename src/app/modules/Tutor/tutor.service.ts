@@ -32,6 +32,7 @@ const getAllTutors = async () => {
     return prisma.tutor.findMany({
         include: {
             availability: true,
+            user: true,
         }
     });
 };
@@ -43,6 +44,7 @@ const getTutorById = async (id: string) => {
         },
         include: {
             availability: true,
+            user: true,
         }
     });
 };
