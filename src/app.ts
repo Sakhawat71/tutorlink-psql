@@ -8,9 +8,14 @@ import status from 'http-status';
 
 const app: Application = express();
 
+
 app.use(
     cors({
-        origin: ['*', 'http://localhost:3000'],
+        origin: [
+            'https://tutorlink-s3h.vercel.app',
+            'http://localhost:3000'
+        ],
+        credentials: true,
     }),
 );
 app.use(express.json({ limit: '50mb' }));
