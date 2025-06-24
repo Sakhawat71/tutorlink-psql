@@ -34,13 +34,15 @@ model Tutor {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
-  bio         String
-  experience  String
-  hourlyRate  Float
-  subjectList String[]
-  location    Location
-  isAvailable Boolean  @default(true)
-  subjects    String[]
+  name         String
+  email        String
+  profileImage String
+  bio          String
+  experience   Int
+  hourlyRate   Float
+  subjectList  String[]
+  location     Location
+  isAvailable  Boolean  @default(true)
 
   availability Availability[]
   bookings     Booking[]
@@ -143,13 +145,13 @@ enum PaymentStatus {
 }
 
 model Availability {
-  id        String  @id @default(uuid())
+  id        String @id @default(uuid())
   day       Day // Strict enum days
   startTime String // "10:00" format
   endTime   String // "12:00" format
-  
-  Tutor     Tutor?  @relation(fields: [tutorId], references: [id])
-  tutorId   String?
+
+  Tutor   Tutor?  @relation(fields: [tutorId], references: [id])
+  tutorId String?
 }
 
 enum Day {
