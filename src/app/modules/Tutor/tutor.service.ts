@@ -2,21 +2,47 @@ import prisma from "../../utils/primsa"
 
 
 const createTutor = async (payload: any) => {
-    return prisma.tutor.create({
-        data: {
-            ...payload
-        }
-    });
+    const { availability, userId, ...rest } = payload;
+
+    const [createdTutor] = await prisma.$transaction([
+        prisma.tutor.create({
+            data: {
+                ...rest,
+                userId,
+                availability: {
+                    create: availability,
+                },
+            },
+        }),
+        prisma.user.update({
+            where: { id: userId },
+            data: {
+                isCompleteProfile: true,
+            },
+        }),
+    ]);
+
+    return createdTutor;
 };
 
+
+
+
 const getAllTutors = async () => {
-    return prisma.tutor.findMany();
+    return prisma.tutor.findMany({
+        include: {
+            availability: true,
+        }
+    });
 };
 
 const getTutorById = async (id: string) => {
     return prisma.tutor.findUnique({
         where: {
             id
+        },
+        include: {
+            availability: true,
         }
     });
 };
