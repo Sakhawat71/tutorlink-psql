@@ -26,8 +26,6 @@ const createTutor = async (payload: any) => {
 };
 
 
-
-
 const getAllTutors = async () => {
     return prisma.tutor.findMany({
         include: {

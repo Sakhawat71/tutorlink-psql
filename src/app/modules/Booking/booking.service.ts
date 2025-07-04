@@ -1,0 +1,44 @@
+import prisma from "../../utils/primsa";
+
+
+const createBooking = async (
+    payload: any
+) => {
+    const createBooking = await prisma.booking.create({
+        data: payload
+    });
+    return createBooking;
+};
+
+const getAllBookings = async () => {
+    return prisma.booking.findMany();
+}
+
+const getBookingById = async (
+    id: string
+) => {
+    return prisma.booking.findUnique({
+        where: {
+            id
+        }
+    });
+};
+
+const updateBooking = async (
+    id: string,
+    payload: any
+) => {
+    return prisma.booking.update({
+        where: {
+            id
+        },
+        data: payload
+    })
+};
+
+export const BookingServices = {
+    createBooking,
+    getAllBookings,
+    getBookingById,
+    updateBooking,
+};
