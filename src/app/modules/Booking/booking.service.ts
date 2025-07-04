@@ -1,8 +1,9 @@
 import prisma from "../../utils/primsa";
+import { IBooking } from "./booking.interface";
 
 
 const createBooking = async (
-    payload: any
+    payload: IBooking
 ) => {
     const createBooking = await prisma.booking.create({
         data: payload
