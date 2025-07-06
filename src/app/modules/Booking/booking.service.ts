@@ -25,6 +25,24 @@ const getBookingById = async (
     });
 };
 
+// const getBookingByEmail = async (
+//     email: string
+// ) => {
+//     return prisma.booking.findMany({
+//         where :{
+//             OR : [
+//                 {
+//                     userEmail: email
+//                 },
+//                 {
+//                     tutorEmail: email
+//                 }
+//             ]
+//         }
+
+//     });
+// }
+
 const updateBooking = async (
     id: string,
     payload: any
