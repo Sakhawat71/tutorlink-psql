@@ -9,6 +9,7 @@ export interface IBooking {
     date: Date;
     duration: number;
     price: number;
+    subject: string;
 
     status: BookingStatus;
 
