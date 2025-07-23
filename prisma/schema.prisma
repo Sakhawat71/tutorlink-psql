@@ -81,6 +81,9 @@ model Booking {
   tutorId String
   tutor   Tutor  @relation(fields: [tutorId], references: [id])
 
+  selectedSlotId String
+  selectedSlot   Availability @relation(fields: [selectedSlotId], references: [id])
+
   date     DateTime
   duration Int
   price    Float
@@ -152,6 +155,8 @@ model Availability {
 
   Tutor   Tutor?  @relation(fields: [tutorId], references: [id])
   tutorId String?
+
+  Booking Booking[]
 }
 
 enum Day {

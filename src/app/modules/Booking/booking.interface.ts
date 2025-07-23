@@ -4,6 +4,7 @@ export interface IBooking {
     id?: string;
     studentId: string;
     tutorId: string;
+    selectedSlotId: string;
 
     date: Date;
     duration: number;
