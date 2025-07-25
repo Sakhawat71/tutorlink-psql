@@ -3,13 +3,13 @@ import catchAsync from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { TutorService } from "./tutor.service";
 import pickQuery from "../../utils/pickQuery";
-import { tutorFilterableFields } from "./tutor.constant";
+import { tutorFilterableFields, tutorPaginationFields } from "./tutor.constant";
 
 
 const getAllTutors = catchAsync(async (req, res) => {
 
     const filters = pickQuery(req.query, tutorFilterableFields);
-    const options = pickQuery(req.query, tutorFilterableFields);
+    const options = pickQuery(req.query, tutorPaginationFields);
 
 
     const tutors = await TutorService.getAllTutors(filters, options);

@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { paginationHelper } from "../../utils/peginationHelper";
 import prisma from "../../utils/primsa"
 
@@ -27,22 +28,96 @@ const createTutor = async (payload: any) => {
 };
 
 
-const getAllTutors = async (
-    filters : any,
-    options : any
-) => {
-
+const getAllTutors = async (filters: any, options: any) => {
     const { searchTerm, ...filterData } = filters;
     const { page, limit, skip, sortBy, sortOrder } = paginationHelper.calculatePagination(options);
 
-    console.log(searchTerm,filterData);
+    const andConditions: Prisma.TutorWhereInput[] = [];
 
-    return prisma.tutor.findMany({
+    if (searchTerm) {
+        andConditions.push({
+            OR: [
+                {
+                    name: {
+                        contains: searchTerm,
+                        mode: 'insensitive',
+                    },
+                },
+                {
+                    subjectList: {
+                        has: searchTerm,
+                    },
+                },
+                {
+                    bio: {
+                        contains: searchTerm,
+                        mode: 'insensitive',
+                    },
+                },
+            ],
+        });
+    }
+
+    // Filter Logic
+    if (filterData.name) {
+        andConditions.push({
+            name: {
+                contains: filterData.name,
+                mode: 'insensitive',
+            },
+        });
+    }
+
+    if (filterData.hourlyRate) {
+        andConditions.push({
+            hourlyRate: {
+                equals: Number(filterData.hourlyRate),
+            },
+        });
+    }
+
+    if (filterData.experience) {
+        andConditions.push({
+            experience: {
+                equals: Number(filterData.experience),
+            },
+        });
+    }
+
+    if (filterData.location) {
+        andConditions.push({
+            location: filterData.location,
+        });
+    }
+
+    const whereConditions: Prisma.TutorWhereInput =
+        andConditions.length > 0 ? { AND: andConditions } : {};
+
+    const result = await prisma.tutor.findMany({
+        where: whereConditions,
+        skip,
+        take: limit,
+        orderBy: sortBy && sortOrder ? { [sortBy]: sortOrder } : { createdAt: 'desc' },
         include: {
             availability: true,
             user: true,
-        }
+            reviews: true,
+        },
     });
+
+    const total = await prisma.tutor.count({
+        where: whereConditions,
+    });
+
+    return {
+        meta: {
+            page,
+            limit,
+            skip,
+            total,
+        },
+        result,
+    };
 };
 
 const getTutorById = async (id: string) => {

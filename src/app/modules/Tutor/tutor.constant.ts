@@ -1,10 +1,4 @@
 
-export const tutorSearchTerm: string[] = [
-    'name',
-    "subjectList",
-    "bio"
-];
-
 export const tutorFilterableFields: string[] = [
     'searchTerm',
     'name',
