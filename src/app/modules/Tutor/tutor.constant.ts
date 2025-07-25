@@ -1,15 +1,16 @@
 
-// export const tutorSearchTerm: string[] = [
-//     'name',
-//     'description',
-//     'company',
-// ];
+export const tutorSearchTerm: string[] = [
+    'name',
+    "subjectList",
+    "bio"
+];
 
 export const tutorFilterableFields: string[] = [
     'searchTerm',
     'name',
-    'company',
-    'price',
+    'hourlyRate',
+    'experience',
+    'location'
 ];
 
 export const tutorPaginationFields: string[] = [

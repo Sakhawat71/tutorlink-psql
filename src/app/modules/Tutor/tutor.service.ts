@@ -1,3 +1,4 @@
+import { paginationHelper } from "../../utils/peginationHelper";
 import prisma from "../../utils/primsa"
 
 
@@ -26,7 +27,16 @@ const createTutor = async (payload: any) => {
 };
 
 
-const getAllTutors = async () => {
+const getAllTutors = async (
+    filters : any,
+    options : any
+) => {
+
+    const { searchTerm, ...filterData } = filters;
+    const { page, limit, skip, sortBy, sortOrder } = paginationHelper.calculatePagination(options);
+
+    console.log(searchTerm,filterData);
+
     return prisma.tutor.findMany({
         include: {
             availability: true,

@@ -3,6 +3,24 @@ import catchAsync from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { TutorService } from "./tutor.service";
 import pickQuery from "../../utils/pickQuery";
+import { tutorFilterableFields } from "./tutor.constant";
+
+
+const getAllTutors = catchAsync(async (req, res) => {
+
+    const filters = pickQuery(req.query, tutorFilterableFields);
+    const options = pickQuery(req.query, tutorFilterableFields);
+
+
+    const tutors = await TutorService.getAllTutors(filters, options);
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Tutors retrieved successfully",
+        data: tutors,
+    });
+});
+
 
 const createTutor = catchAsync(async (req, res) => {
     const tutor = await TutorService.createTutor(req.body);
@@ -14,16 +32,6 @@ const createTutor = catchAsync(async (req, res) => {
     });
 });
 
-const getAllTutors = catchAsync(async (req, res) => {
-    const filters = pickQuery(req.query, [])
-    const tutors = await TutorService.getAllTutors();
-    sendResponse(res, {
-        statusCode: status.OK,
-        success: true,
-        message: "Tutors retrieved successfully",
-        data: tutors,
-    });
-});
 
 const getTutorById = catchAsync(async (req, res) => {
     const tutor = await TutorService.getTutorById(req.params.id);

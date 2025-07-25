@@ -5,7 +5,7 @@ const pickQuery = <T, K extends keyof T>(obj: T, keys: K[]): Partial<T> => {
             finalObj[key] = obj[key];
         }
     }
-    return finalObj
+    return finalObj;
 }
 
 export default pickQuery;
