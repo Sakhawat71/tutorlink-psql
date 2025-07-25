@@ -2,6 +2,7 @@ import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { TutorService } from "./tutor.service";
+import pickQuery from "../../utils/pickQuery";
 
 const createTutor = catchAsync(async (req, res) => {
     const tutor = await TutorService.createTutor(req.body);
@@ -14,6 +15,7 @@ const createTutor = catchAsync(async (req, res) => {
 });
 
 const getAllTutors = catchAsync(async (req, res) => {
+    const filters = pickQuery(req.query, [])
     const tutors = await TutorService.getAllTutors();
     sendResponse(res, {
         statusCode: status.OK,
