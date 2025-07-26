@@ -45,7 +45,7 @@ const getAllTutors = async (filters: any, options: any) => {
                 },
                 {
                     subjectList: {
-                        has: searchTerm,
+                        hasSome: [searchTerm],
                     },
                 },
                 {
@@ -56,7 +56,8 @@ const getAllTutors = async (filters: any, options: any) => {
                 },
             ],
         });
-    }
+    };
+
 
     // Filter Logic
     if (filterData.name) {
