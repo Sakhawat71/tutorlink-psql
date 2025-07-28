@@ -4,7 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { paymentService } from "./payment.service";
 
 const initPayment = catchAsync(async (req, res) => {
-    const result = await paymentService.initPayment();
+    const result = await paymentService.initPayment(req.params.id);
     sendResponse(res, {
         statusCode: status.OK,
         success: true,

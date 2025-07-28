@@ -5,7 +5,7 @@ import { paymentController } from "./payment.controller";
 const router = Router();
 
 router.post(
-    "/init-payment",
+    "/init-payment/:id",
     paymentController.initPayment
 )
 
