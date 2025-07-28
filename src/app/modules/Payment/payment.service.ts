@@ -2,7 +2,7 @@ import status from "http-status";
 import { AppError } from "../../errors/AppError";
 import prisma from "../../utils/primsa";
 import { SSLService } from "../SSL/ssl.service";
-import { PaymentStatus } from "@prisma/client";
+import { BookingStatus, PaymentStatus } from "@prisma/client";
 
 
 const initPayment = async (bookingId: string) => {
@@ -60,7 +60,7 @@ const validatePayment = async (query: any) => {
     const payment = await prisma.payment.findUnique({
         where: {
             transactionId: query.tran_id
-        }
+        },
     });
 
     if (!payment) {
@@ -70,43 +70,33 @@ const validatePayment = async (query: any) => {
         );
     };
 
-    // const isPaid = await prisma.payment.findFirst({
-    //     where: {
-    //         transactionId: query.tran_id,
-    //         status: PaymentStatus.PAID
-    //     }
-    // });
-    // if (isPaid) {
-    //     throw new AppError(
-    //         'Already paid',
-    //         status.BAD_REQUEST
-    //     );
-    // };
+    const updatedPayment = await prisma.$transaction(async (tx) => {
 
-
-    await prisma.$transaction(async (tx) => {
         const updatedPaymentData = await tx.payment.update({
             where: {
                 transactionId: query.tran_id
             },
             data: {
                 status: PaymentStatus.COMPLETED,
-                paymentGatewayData: query
             }
         });
 
-        await tx.account.update({
+        await tx.booking.update({
             where: {
-                id: updatedPaymentData.accountId
+                id: updatedPaymentData.bookingId
             },
             data: {
-                isPremium: true
+                status: BookingStatus.CONFIRMED
             }
         });
+        return updatedPaymentData;
     });
 
     return {
-        message: "Payment success!"
+        // t_id: query.tran_id,
+        message: "Payment success!",
+        status: PaymentStatus.COMPLETED,
+        data: updatedPayment
     }
 };
 
@@ -114,4 +104,5 @@ const validatePayment = async (query: any) => {
 
 export const paymentService = {
     initPayment,
+    validatePayment
 }

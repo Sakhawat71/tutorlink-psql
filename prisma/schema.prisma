@@ -107,7 +107,7 @@ model Payment {
 
   amount        Float
   paymentMethod String // "stripe", "sslcommerz", "paypal"
-  transactionId String
+  transactionId String        @unique
   status        PaymentStatus @default(PENDING)
 
   createdAt DateTime @default(now())
