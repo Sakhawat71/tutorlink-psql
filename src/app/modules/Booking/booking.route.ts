@@ -4,13 +4,18 @@ import { bookingControllers } from "./booking.controller";
 const router = Router();
 
 router.get(
-    "/all-bookings",
+    "/",
     bookingControllers.getAllBookings
 );
 
 router.get(
     "/:id",
     bookingControllers.getBookingById
+);
+
+router.get(
+    "/my-booking/:studentId",
+    bookingControllers.myBooking
 );
 
 router.post(
