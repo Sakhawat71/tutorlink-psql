@@ -44,6 +44,17 @@ const getBookingById = catchAsync(async (req, res) => {
 });
 
 
+const myBooking = catchAsync(async (req, res) => {
+    const { studentId } = req.params;
+    const result = await BookingServices.myBooking(studentId);
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Bookings retrieved successfully",
+        data: result
+    });
+})
+
 const updateBooking = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await BookingServices.updateBooking(id, req.body);
@@ -68,4 +79,5 @@ export const bookingControllers = {
     getAllBookings,
     getBookingById,
     updateBooking,
+    myBooking
 };

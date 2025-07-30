@@ -25,6 +25,14 @@ const getBookingById = async (
     });
 };
 
+const myBooking = async (id: string) => {
+    return prisma.booking.findMany({
+        where: {
+            studentId: id
+        }
+    });
+};
+
 // const getBookingByEmail = async (
 //     email: string
 // ) => {
@@ -60,4 +68,5 @@ export const BookingServices = {
     getAllBookings,
     getBookingById,
     updateBooking,
+    myBooking
 };
