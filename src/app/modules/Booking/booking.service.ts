@@ -32,6 +32,11 @@ const myBooking = async (id: string) => {
         },
         include: {
             selectedSlot: true,
+            tutor: {
+                select: {
+                    name: true,
+                }
+            }
         }
     });
 };
