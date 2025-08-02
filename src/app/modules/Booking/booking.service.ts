@@ -29,6 +29,9 @@ const myBooking = async (id: string) => {
     return prisma.booking.findMany({
         where: {
             studentId: id
+        },
+        include: {
+            selectedSlot: true,
         }
     });
 };
