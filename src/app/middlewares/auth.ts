@@ -40,9 +40,8 @@ const auth = (...roles: string[]) => {
         };
 
         req.user = decoded;
-
         next();
-    })
+    });
 };
 
 

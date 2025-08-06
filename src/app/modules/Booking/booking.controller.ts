@@ -53,7 +53,7 @@ const myBooking = catchAsync(async (req, res) => {
         message: "Bookings retrieved successfully",
         data: result
     });
-})
+});
 
 const updateBooking = catchAsync(async (req, res) => {
     const { id } = req.params;

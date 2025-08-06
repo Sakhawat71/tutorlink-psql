@@ -13,7 +13,7 @@ const createBooking = async (
 
 const getAllBookings = async () => {
     return prisma.booking.findMany();
-}
+};
 
 const getBookingById = async (
     id: string
