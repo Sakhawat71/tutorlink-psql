@@ -2,7 +2,7 @@ import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 
-const myBooking = catchAsync(async (req, res) => {
+const getUser = catchAsync(async (req, res) => {
 
     console.log(req.user);
     const { studentId } = req.params;
@@ -13,4 +13,9 @@ const myBooking = catchAsync(async (req, res) => {
         message: "Bookings retrieved successfully",
         // data: result
     });
-})
+});
+
+
+export const userControllers = {
+    getUser
+};
