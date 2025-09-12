@@ -63,7 +63,7 @@ Welcome to the **TutorLink Backend** repository! This is the backend for the Tut
 ### 1️⃣ Clone the Repository
 
 ```sh
-git clone https://github.com/sakhawat71/tutorlink-backend.git
+git clone https://github.com/sakhawat71/tutorlink-psql.git
 cd tutorlink-backend
 ```
 
