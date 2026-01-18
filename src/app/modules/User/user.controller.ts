@@ -5,11 +5,11 @@ import { UserServices } from "./user.service";
 
 const getUser = catchAsync(async (req, res) => {
     const { id } = req.params;
-    const result = await UserServices.getUser(id);
+    const result = await UserServices.getUserById(id);
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
-        message: "Bookings retrieved successfully",
+        message: "User retrieved successfully",
         data: result
     });
 });

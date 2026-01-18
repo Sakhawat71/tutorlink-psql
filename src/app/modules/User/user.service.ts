@@ -9,7 +9,20 @@ const getUser = (id: string) => {
     });
 };
 
+const getUserById = async (id: string) => {
+    return prisma.user.findUnique({
+        where: {
+            id
+        },
+        include: {
+            tutor: true,
+            student:true,
+        },
+    });
+};
+
 
 export const UserServices = {
-    getUser
+    getUser,
+    getUserById
 };

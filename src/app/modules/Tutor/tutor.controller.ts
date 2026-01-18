@@ -11,7 +11,6 @@ const getAllTutors = catchAsync(async (req, res) => {
     const filters = pickQuery(req.query, tutorFilterableFields);
     const options = pickQuery(req.query, tutorPaginationFields);
 
-
     const tutors = await TutorService.getAllTutors(filters, options);
     sendResponse(res, {
         statusCode: status.OK,
