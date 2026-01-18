@@ -15,6 +15,18 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 
+const getUserByEmail = catchAsync(async (req,res)=> {
+    const { email } = req.params;
+    const result = await UserServices.getUserByEmail(email);
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "User retrieved successfully",
+        data: result
+    });
+});
+
 export const userControllers = {
-    getUser
+    getUser,
+    getUserByEmail,
 };

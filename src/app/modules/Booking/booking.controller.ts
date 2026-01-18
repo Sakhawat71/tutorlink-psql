@@ -74,10 +74,22 @@ const updateBooking = catchAsync(async (req, res) => {
 });
 
 
+const getBookingByEmail = catchAsync(async (req, res) => {
+    const { email } = req.params;
+    const result = await BookingServices.getBookingByEmail(email);
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Booking retrieved successfully",
+        data: result
+    })
+});
+
 export const bookingControllers = {
     createBooking,
     getAllBookings,
     getBookingById,
     updateBooking,
-    myBooking
+    myBooking,
+    getBookingByEmail,
 };

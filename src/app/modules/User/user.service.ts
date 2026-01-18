@@ -21,8 +21,21 @@ const getUserById = async (id: string) => {
     });
 };
 
+const getUserByEmail = async (email : string) => {
+        return prisma.user.findUnique({
+        where: {
+            email
+        },
+        include: {
+            tutor: true,
+            student:true,
+        },
+    });
+};
+
 
 export const UserServices = {
     getUser,
-    getUserById
+    getUserById,
+    getUserByEmail
 };

@@ -41,23 +41,26 @@ const myBooking = async (id: string) => {
     });
 };
 
-// const getBookingByEmail = async (
-//     email: string
-// ) => {
-//     return prisma.booking.findMany({
-//         where :{
-//             OR : [
-//                 {
-//                     userEmail: email
-//                 },
-//                 {
-//                     tutorEmail: email
-//                 }
-//             ]
-//         }
 
-//     });
-// }
+const getBookingByEmail = async (
+    email: string
+) => {
+    return prisma.booking.findMany({
+        where :{
+            tutor: {
+                email: email
+            }
+        },
+        include: {
+            user:{
+                select:{
+                    name : true
+                }
+            },
+            selectedSlot: true
+        }
+    });
+}
 
 const updateBooking = async (
     id: string,
@@ -76,5 +79,6 @@ export const BookingServices = {
     getAllBookings,
     getBookingById,
     updateBooking,
-    myBooking
+    myBooking,
+    getBookingByEmail
 };

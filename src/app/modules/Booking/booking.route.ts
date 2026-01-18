@@ -18,6 +18,11 @@ router.get(
     bookingControllers.myBooking
 );
 
+router.get(
+    '/email/:email',
+    bookingControllers.getBookingByEmail
+)
+
 router.post(
     "/create-booking",
     bookingControllers.createBooking

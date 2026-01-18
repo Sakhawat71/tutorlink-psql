@@ -5,5 +5,6 @@ const router = Router();
 
 router.get("/:id", userControllers.getUser);
 // router.get("/:id", userControllers.getUser);
+router.get("/email/:email", userControllers.getUserByEmail);
 
 export const userRoutes = router;
