@@ -6,6 +6,11 @@ import prisma from "../../utils/primsa"
 const createTutor = async (payload: any) => {
     const { availability, userId, ...rest } = payload;
 
+    const existingTutor = await prisma.tutor.findUnique({ where: { userId } });
+    if (existingTutor) {
+        throw new Error("You already have a tutor profile. Please edit it instead.");
+    }
+
     const [createdTutor] = await prisma.$transaction([
         prisma.tutor.create({
             data: {

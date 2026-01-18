@@ -24,6 +24,7 @@ const getAllTutors = catchAsync(async (req, res) => {
 
 const createTutor = catchAsync(async (req, res) => {
     const tutor = await TutorService.createTutor(req.body);
+    console.log(tutor);
     sendResponse(res, {
         statusCode: status.CREATED,
         success: true,
